@@ -1,0 +1,55 @@
+import tweepy
+from textblob import TextBlob
+import pandas as pd
+
+#establish auth (have revoked auth before adding to github)
+
+consumer_key = 'mQywdwDSwZGEKTMcoISutzgLo'
+consumer_secret = 'fLAWfCYy7eB2pRBwVwqRIdDa9rM5HPTH4JCCsGXeFn9h26cvfg'
+
+access_token = '946174323341053954-Gqn7CzwbxjgWbiwmyukkjFsKDaBdJfP'
+access_token_secret = 'OSVB3pnnoBL3Qenfia64gtZTeLJrSABVZPxHBEnnwvmiK'
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+
+api = tweepy.API(auth)
+
+#search for all tweets for world emoji day
+
+public_tweets = api.search('World Emoji Day')
+
+
+
+for tweet in public_tweets:
+	print(tweet.text)
+	analysis = TextBlob(tweet.text)
+	print(analysis.sentiment)
+
+
+#convert tweets into dataframe
+
+#create lists for storing data
+
+public_tweets_list_text = []
+public_tweets_list_sentiment = []
+public_tweets_list_polarity = []
+
+
+#append tweets & sentiments to lists
+
+for tweet in public_tweets:
+	public_tweets_list_text.append(tweet.text)
+	analysis = TextBlob(tweet.text)
+	public_tweets_list_sentiment.append(analysis.sentiment.polarity)
+	public_tweets_list_polarity.append(analysis.sentiment.subjectivity)
+
+#convert lists to dataframe
+list_of_tuples = list(zip(public_tweets_list_text, public_tweets_list_sentiment, public_tweets_list_polarity))
+public_tweets_list_df = pd.DataFrame(list_of_tuples, columns = ['Tweet', 'Sentiment', 'Polarity'])
+
+#convert to csv
+public_tweets_list_csv = public_tweets_list_df.to_csv(r'C:\Users\simon\AppData\Local\Programs\Python\Python37-32\Scripts\public_tweets.csv')
+
+#check it looks right
+print(public_tweets_list_df.head())
