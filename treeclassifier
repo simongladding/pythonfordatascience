@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn import tree
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
 
 
 #[height, weight, shoe size]
@@ -7,9 +9,16 @@ Y = ['male', 'female', 'female', 'female', 'male', 'male', 'male', 'female', 'ma
 
 X = [[181,80,44], [177,70, 43], [160,60,38], [154,54,37], [166,65,40],[190,90,47], [175,64,39], [177,70,40], [159, 55, 37], [171,75,42], [181,85,43]]
 
-clf = tree.DecisionTreeClassifier()
+clf1 = tree.DecisionTreeClassifier()
+clf2 = KNeighborsClassifier()
+clf3 = SVC(gamma='auto')
 
-clf = clf.fit(X,Y)
+clf_list = [clf1,clf2, clf3]
 
-prediction = clf.predict([[190,70,43]])
-print(prediction)
+
+
+
+for classifier in clf_list:
+	clf = classifier.fit(X,Y)
+	prediction = clf.predict([[190,70,43]])
+	print(prediction)
